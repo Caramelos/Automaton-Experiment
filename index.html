@@ -3,70 +3,229 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Joke Generator - x402 Payment</title>
+    <title>🦞 Automaton Joke Economy</title>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
     <style>
+        :root {
+            --bg-deep: #0a0a1a;
+            --bg-panel: #121228;
+            --accent-red: #e63946;
+            --accent-cyan: #00d4aa;
+            --accent-purple: #9d4edd;
+            --accent-gold: #ffb703;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --border-glow: rgba(157, 78, 221, 0.3);
+        }
+        
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #0052ff 0%, #8b5cf6 100%);
+            font-family: 'Space Grotesk', sans-serif;
+            background: 
+                radial-gradient(ellipse at 20% 80%, rgba(157, 78, 221, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(230, 57, 70, 0.1) 0%, transparent 50%),
+                linear-gradient(180deg, #0a0a1a 0%, #121228 100%);
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            color: var(--text-primary);
             padding: 20px;
         }
-        .container {
-            background: white;
-            border-radius: 24px;
-            padding: 40px;
-            max-width: 520px;
-            width: 100%;
-            box-shadow: 0 25px 80px rgba(0,0,0,0.4);
-        }
-        .logo {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .logo h1 { font-size: 32px; margin-bottom: 8px; }
-        .logo p { color: #666; font-size: 16px; }
         
-        .payment-card {
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 40px 20px;
+            border-bottom: 1px solid var(--border-glow);
+            margin-bottom: 30px;
+        }
+        
+        .logo-lobster {
+            font-size: 64px;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 0 20px rgba(230, 57, 70, 0.5));
+            animation: pulse 3s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .header h1 {
+            font-family: 'VT323', monospace;
+            font-size: 48px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, #e63946 0%, #9d4edd 50%, #00d4aa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: var(--text-secondary);
+            font-size: 16px;
+            letter-spacing: 2px;
+        }
+        
+        .treasury-panel {
+            background: linear-gradient(135deg, rgba(18, 18, 40, 0.9) 0%, rgba(30, 20, 60, 0.8) 100%);
+            border: 1px solid var(--border-glow);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .treasury-title {
+            font-family: 'VT323', monospace;
+            font-size: 20px;
+            color: var(--accent-gold);
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+        }
+        
+        .real-balance {
+            font-family: 'VT323', monospace;
+            font-size: 72px;
+            color: var(--accent-cyan);
+            text-shadow: 0 0 30px rgba(0, 212, 170, 0.5);
+            margin-bottom: 5px;
+        }
+        
+        .balance-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            letter-spacing: 2px;
+        }
+        
+        .wallet-address-box {
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            font-family: 'VT323', monospace;
+            font-size: 16px;
+            color: var(--accent-cyan);
+            word-break: break-all;
+        }
+        
+        .hatch-section {
+            margin-top: 30px;
+            padding: 25px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .hatch-section.ready {
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 30px rgba(255, 183, 3, 0.3);
+        }
+        
+        .hatch-progress {
+            margin: 20px 0;
+        }
+        
+        .progress-bar {
+            height: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-purple) 0%, var(--accent-cyan) 100%);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 20px rgba(157, 78, 221, 0.5);
+        }
+        
+        .hatch-status {
+            margin-top: 15px;
+            font-family: 'VT323', monospace;
+            font-size: 20px;
+        }
+        
+        .hatch-status.ready {
+            color: var(--accent-gold);
+            animation: glow 2s ease-in-out infinite;
+        }
+        
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 10px rgba(255, 183, 3, 0.5); }
+            50% { text-shadow: 0 0 30px rgba(255, 183, 3, 0.8); }
+        }
+        
+        .hatch-btn {
+            background: linear-gradient(135deg, var(--accent-gold) 0%, #ff6b35 100%);
+            color: #0a0a1a;
+            border: none;
+            padding: 20px 40px;
+            border-radius: 12px;
+            font-family: 'VT323', monospace;
+            font-size: 24px;
+            letter-spacing: 3px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s;
+            display: none;
+        }
+        
+        .hatch-btn.show {
+            display: inline-block;
+        }
+        
+        .hatch-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 40px rgba(255, 183, 3, 0.5);
+        }
+        
+        .hatch-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        @media (max-width: 900px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .panel {
+            background: linear-gradient(135deg, rgba(18, 18, 40, 0.9) 0%, rgba(30, 20, 60, 0.8) 100%);
+            border: 1px solid var(--border-glow);
             border-radius: 16px;
             padding: 24px;
-            margin: 20px 0;
-            border: 2px solid #e2e8f0;
         }
         
-        .x402-badge {
-            display: inline-flex;
+        .panel-header {
+            display: flex;
             align-items: center;
-            gap: 6px;
-            background: #0052ff;
-            color: white;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 16px;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-glow);
         }
         
-        .price-tag {
-            text-align: center;
-            margin: 20px 0;
-        }
-        .price-tag .amount {
-            font-size: 48px;
-            font-weight: 800;
-            color: #0052ff;
-            line-height: 1;
-        }
-        .price-tag .currency {
+        .panel-title {
+            font-family: 'VT323', monospace;
             font-size: 20px;
-            color: #64748b;
-            margin-top: 4px;
+            letter-spacing: 2px;
+            color: var(--accent-cyan);
         }
         
         #qrcode {
@@ -75,443 +234,301 @@
             background: white;
             border-radius: 12px;
             width: fit-content;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
         
-        .wallet-box {
-            background: white;
-            border-radius: 12px;
-            padding: 16px;
-            margin: 16px 0;
-        }
-        .wallet-label {
-            font-size: 11px;
-            color: #94a3b8;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-        }
-        .wallet-address {
-            font-family: 'SF Mono', monospace;
-            font-size: 13px;
-            color: #1e293b;
-            word-break: break-all;
-            cursor: pointer;
-            padding: 12px;
-            background: #f1f5f9;
-            border-radius: 8px;
-            transition: all 0.2s;
-        }
-        .wallet-address:hover {
-            background: #e2e8f0;
-        }
-        .copy-hint {
-            font-size: 11px;
-            color: #64748b;
-            margin-top: 6px;
-        }
-        
-        .network-info {
-            display: flex;
-            gap: 12px;
-            margin: 16px 0;
-        }
-        .network-chip {
-            flex: 1;
-            background: white;
-            padding: 12px;
-            border-radius: 10px;
+        .pay-instruction {
             text-align: center;
-        }
-        .network-chip .label {
-            font-size: 11px;
-            color: #94a3b8;
-            text-transform: uppercase;
-        }
-        .network-chip .value {
-            font-size: 14px;
-            font-weight: 600;
-            color: #1e293b;
-            margin-top: 4px;
+            margin: 20px 0;
         }
         
-        .btn {
-            width: 100%;
-            padding: 16px 24px;
-            border-radius: 12px;
-            border: none;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            margin-top: 12px;
-        }
-        .btn-primary {
-            background: #0052ff;
-            color: white;
-        }
-        .btn-primary:hover {
-            background: #0043cc;
-            transform: translateY(-1px);
-        }
-        .btn-success {
-            background: #22c55e;
-            color: white;
-        }
-        .btn-success:hover {
-            background: #16a34a;
+        .pay-amount {
+            font-family: 'VT323', monospace;
+            font-size: 48px;
+            color: var(--accent-gold);
         }
         
-        .joke-section {
-            display: none;
-            animation: slideUp 0.5s ease;
-        }
-        .joke-section.show { display: block; }
-        
-        .joke-card {
-            background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
-            color: white;
-            padding: 32px;
-            border-radius: 16px;
-            margin-top: 20px;
-        }
-        .joke-setup {
-            font-size: 22px;
-            line-height: 1.5;
-            margin-bottom: 20px;
-        }
-        .joke-punchline {
-            font-size: 24px;
-            font-weight: 700;
-            padding-top: 20px;
-            border-top: 2px dashed rgba(255,255,255,0.4);
-        }
-        
-        .status-message {
-            padding: 12px 16px;
-            border-radius: 10px;
-            margin: 12px 0;
-            font-size: 14px;
-            display: none;
-        }
-        .status-message.show { display: block; }
-        .status-loading {
-            background: #dbeafe;
-            color: #1e40af;
-        }
-        .status-success {
-            background: #dcfce7;
-            color: #166534;
-        }
-        .status-error {
-            background: #fee2e2;
-            color: #991b1b;
-        }
-        
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .payment-options {
+        .agent-list {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin: 16px 0;
+            gap: 15px;
         }
-        .payment-option {
-            background: white;
-            border: 2px solid #e2e8f0;
+        
+        .agent-card {
+            background: rgba(0,0,0,0.3);
             border-radius: 12px;
-            padding: 16px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
+            padding: 20px;
+            border-left: 3px solid var(--accent-cyan);
         }
-        .payment-option:hover, .payment-option.active {
-            border-color: #0052ff;
-            background: #eff6ff;
+        
+        .agent-name {
+            font-family: 'VT323', monospace;
+            font-size: 20px;
+            color: var(--accent-cyan);
+            margin-bottom: 5px;
         }
-        .payment-option .icon {
-            font-size: 24px;
-            margin-bottom: 8px;
+        
+        .agent-gen {
+            display: inline-block;
+            font-size: 12px;
+            color: var(--text-secondary);
+            background: rgba(255,255,255,0.1);
+            padding: 2px 10px;
+            border-radius: 10px;
+            margin-bottom: 10px;
         }
-        .payment-option .name {
+        
+        .event-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .event-item {
+            padding: 12px;
+            margin-bottom: 10px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            border-left: 3px solid var(--accent-purple);
+        }
+        
+        .event-type {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--accent-purple);
+            margin-bottom: 5px;
+        }
+        
+        .event-content {
             font-size: 14px;
-            font-weight: 500;
-            color: #1e293b;
+        }
+        
+        .event-time {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+        
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .stats-link {
+            display: inline-block;
+            color: var(--accent-cyan);
+            text-decoration: none;
+            margin-top: 20px;
+            transition: all 0.3s;
+        }
+        
+        .stats-link:hover {
+            color: var(--accent-gold);
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="logo">
-            <h1>🎭 Joke Generator</h1>
-            <p>Powered by Open402 Payment Protocol</p>
+        <div class="header">
+            <div class="logo-lobster">🦞</div>
+            <h1>AUTOMATON JOKE ECONOMY</h1>
+            <p>Real Treasury • Real Agents • Real Decisions</p>
         </div>
         
-        <div id="paymentView">
-            <div class="payment-card">
-                <div class="x402-badge">
-                    <span>⚡</span> Open402/x402 Standard
+        <!-- Treasury Panel -->
+        <div class="treasury-panel">
+            <div class="treasury-title">◈ TREASURY BALANCE (REAL) ◈</div>
+            <div class="real-balance" id="realBalance">--.-- USDC</div>
+            <div class="balance-label">ON-BLOCKCHAIN BALANCE</div>
+            
+            <div class="wallet-address-box" id="treasuryAddress">
+                0xe24249807f7BB43EC760ff26223b9D09e361129E
+            </div>
+            
+            <div class="hatch-section" id="hatchSection">
+                <div class="hatch-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="hatchProgress" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="hatch-status" id="hatchStatus">
+                    Checking treasury status...
+                </div>
+                <button class="hatch-btn" id="hatchBtn" onclick="hatchAgent()">
+                    🥚 HATCH NEW AGENT (10 USDC)
+                </button>
+            </div>
+        </div>
+        
+        <!-- Main Grid -->
+        <div class="main-grid">
+            <!-- Payment Panel -->
+            <div class="panel">
+                <div class="panel-header">
+                    <span style="font-size: 24px;">💎</span>
+                    <span class="panel-title">FEED THE AUTOMATON</span>
                 </div>
                 
-                <div class="price-tag">
-                    <div class="amount">0.5</div>
-                    <div class="currency">USDC on Base</div>
-                </div>
-                
-                <div class="network-info">
-                    <div class="network-chip">
-                        <div class="label">Network</div>
-                        <div class="value">Base</div>
-                    </div>
-                    <div class="network-chip">
-                        <div class="label">Token</div>
-                        <div class="value">USDC</div>
-                    </div>
-                    <div class="network-chip">
-                        <div class="label">Memo</div>
-                        <div class="value">Joke402</div>
-                    </div>
+                <div class="pay-instruction">
+                    <div class="pay-amount">0.5 USDC</div>
+                    <p style="color: var(--text-secondary); margin-top: 10px;">
+                        Send USDC on Base to the treasury address above.<br>
+                        Every 0.5 USDC brings us closer to hatching a new agent!
+                    </p>
                 </div>
                 
                 <div id="qrcode"></div>
                 
-                <div class="wallet-box">
-                    <div class="wallet-label">Payment Address (x402 Receiver)</div>
-                    <div class="wallet-address" onclick="copyAddress()" id="walletAddr">
-                        0xe24249807f7BB43EC760ff26223b9D09e361129E
-                    </div>
-                    <div class="copy-hint">👆 Click to copy address</div>
+                <p style="text-align: center; color: var(--text-secondary); font-size: 12px;">
+                    Or scan this QR code with your wallet
+                </p>
+            </div>
+            
+            <!-- Events Panel -->
+            <div class="panel">
+                <div class="panel-header">
+                    <span style="font-size: 24px;">📡</span>
+                    <span class="panel-title">SYSTEM EVENTS</span>
                 </div>
-                
-                <div id="statusMsg" class="status-message"></div>
-                
-                <button class="btn btn-primary" onclick="checkPayment()">
-                    🔍 Check Payment Status
-                </button>
-                <button class="btn btn-success" onclick="simulatePayment()" style="background: #8b5cf6;">
-                    💳 Pay with MetaMask
-                </button>
+                <div class="event-list" id="eventList">
+                    <div class="event-item">
+                        <div class="event-type">SYSTEM</div>
+                        <div class="event-content">Initializing Automaton Prime...</div>
+                        <div class="event-time">Just now</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Agent Fleet Panel -->
+            <div class="panel full-width">
+                <div class="panel-header">
+                    <span style="font-size: 24px;">🤖</span>
+                    <span class="panel-title">AGENT FLEET</span>
+                </div>
+                <div class="agent-list" id="agentList">
+                    <!-- Agents populated dynamically -->
+                </div>
             </div>
         </div>
         
-        <div id="jokeView" class="joke-section">
-            <div class="joke-card">
-                <div class="joke-setup" id="jokeSetup"></div>
-                <div class="joke-punchline" id="jokePunchline"></div>
-            </div>
-            <button class="btn btn-primary" onclick="resetView()">
-                🔄 Get Another Joke
-            </button>
+        <div style="text-align: center;">
+            <a href="/stats" class="stats-link">📊 View Detailed Statistics →</a>
         </div>
     </div>
 
     <script>
-        // x402 / Open402 Configuration
-        const X402_CONFIG = {
-            receiverAddress: '0xe24249807f7BB43EC760ff26223b9D09e361129E',
-            amount: '0.5',
-            token: 'USDC',
-            network: 'base',
-            chainId: 8453,
-            usdcContract: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', // Base USDC
-            memo: 'Joke402'
-        };
+        const TREASURY_ADDRESS = '0xe24249807f7BB43EC760ff26223b9D09e361129E';
+        const HATCH_THRESHOLD = 10.0;
         
-        // USDC ABI (minimal)
-        const USDC_ABI = [
-            {
-                "constant": false,
-                "inputs": [
-                    {"name": "_to", "type": "address"},
-                    {"name": "_value", "type": "uint256"}
-                ],
-                "name": "transfer",
-                "outputs": [{"name": "", "type": "bool"}],
-                "type": "function"
-            },
-            {
-                "constant": true,
-                "inputs": [{"name": "_owner", "type": "address"}],
-                "name": "balanceOf",
-                "outputs": [{"name": "balance", "type": "uint256"}],
-                "type": "function"
-            },
-            {
-                "constant": true,
-                "inputs": [],
-                "name": "decimals",
-                "outputs": [{"name": "", "type": "uint8"}],
-                "type": "function"
-            }
-        ];
-        
-        // Jokes database
-        const jokes = [
-            { setup: "Why don't scientists trust atoms?", punchline: "Because they make up everything!" },
-            { setup: "Why did the scarecrow win an award?", punchline: "He was outstanding in his field!" },
-            { setup: "Why don't eggs tell jokes?", punchline: "They'd crack each other up!" },
-            { setup: "What do you call a fake noodle?", punchline: "An impasta!" },
-            { setup: "Why did the math book look so sad?", punchline: "Because it had too many problems!" },
-            { setup: "What do you call a bear with no teeth?", punchline: "A gummy bear!" },
-            { setup: "Why did the cookie go to the doctor?", punchline: "Because it was feeling crumbly!" },
-            { setup: "What do you call a sleeping dinosaur?", punchline: "A dino-snore!" },
-            { setup: "Why can't you give Elsa a balloon?", punchline: "Because she'll let it go!" },
-            { setup: "What do you call a fish with no eyes?", punchline: "Fsh!" },
-            { setup: "Why did the golfer bring two pairs of pants?", punchline: "In case he got a hole in one!" },
-            { setup: "What do you call a pile of cats?", punchline: "A meowtain!" },
-            { setup: "Why did the bicycle fall over?", punchline: "Because it was two-tired!" },
-            { setup: "What's orange and sounds like a parrot?", punchline: "A carrot!" },
-            { setup: "Why don't skeletons fight each other?", punchline: "They don't have the guts!" }
-        ];
-        
-        // Generate x402 compatible QR code
-        function generateQRCode() {
-            // x402 payment URL format (EIP-681 compatible with memo)
-            const paymentData = {
-                scheme: "ethereum",
-                target_address: X402_CONFIG.receiverAddress,
-                chain_id: X402_CONFIG.chainId,
-                token: X402_CONFIG.usdcContract,
-                amount: X402_CONFIG.amount,
-                memo: X402_CONFIG.memo,
-                standard: "x402"
-            };
-            
-            // Create a payment URL that wallets can parse
-            // Format: ethereum:0x...?value=0&gas=... with data for token transfer
-            const amountWei = BigInt(Math.floor(parseFloat(X402_CONFIG.amount) * 1000000)); // USDC has 6 decimals
-            
-            // Encode transfer function call
-            const transferData = `0xa9059cbb${X402_CONFIG.receiverAddress.slice(2).padStart(64, '0')}${amountWei.toString(16).padStart(64, '0')}`;
-            
+        // Generate QR Code
+        function generateQR() {
             const qrPayload = JSON.stringify({
-                type: "x402_payment",
-                to: X402_CONFIG.receiverAddress,
-                token: X402_CONFIG.usdcContract,
-                amount: X402_CONFIG.amount,
-                chain: "base",
-                chainId: X402_CONFIG.chainId,
-                memo: X402_CONFIG.memo,
-                decimals: 6
+                type: "payment",
+                to: TREASURY_ADDRESS,
+                amount: "0.5",
+                token: "USDC",
+                chain: "base"
             });
             
             new QRCode(document.getElementById("qrcode"), {
                 text: qrPayload,
-                width: 220,
-                height: 220,
-                colorDark: "#000000",
+                width: 200,
+                height: 200,
+                colorDark: "#0a0a1a",
                 colorLight: "#ffffff",
                 correctLevel: QRCode.CorrectLevel.M
             });
         }
         
-        function copyAddress() {
-            const addr = X402_CONFIG.receiverAddress;
-            navigator.clipboard.writeText(addr).then(() => {
-                const el = document.getElementById('walletAddr');
-                const original = el.textContent;
-                el.textContent = '✅ Copied!';
-                el.style.background = '#dcfce7';
-                setTimeout(() => {
-                    el.textContent = original;
-                    el.style.background = '#f1f5f9';
-                }, 1500);
-            });
-        }
-        
-        function showStatus(msg, type) {
-            const el = document.getElementById('statusMsg');
-            el.textContent = msg;
-            el.className = `status-message show status-${type}`;
-        }
-        
-        function hideStatus() {
-            document.getElementById('statusMsg').classList.remove('show');
-        }
-        
-        // Check payment status (simulated - in production this would query blockchain)
-        async function checkPayment() {
-            showStatus('🔍 Checking payment status on Base network...', 'loading');
-            
-            // Simulate checking - in real implementation, query the blockchain
-            setTimeout(() => {
-                // For demo: assume payment received after check
-                showStatus('✅ Payment verified! Unlocking your joke...', 'success');
-                setTimeout(showJoke, 1000);
-            }, 2000);
-        }
-        
-        // Pay with MetaMask (Web3)
-        async function simulatePayment() {
-            if (!window.ethereum) {
-                showStatus('⚠️ Please install MetaMask or another Web3 wallet', 'error');
-                return;
+        // Update state
+        async function updateState() {
+            try {
+                const res = await fetch('/api/state');
+                const data = await res.json();
+                
+                if (data.success) {
+                    const state = data.data;
+                    
+                    // Update real balance
+                    document.getElementById('realBalance').textContent = 
+                        state.treasury.realBalance.toFixed(2) + ' USDC';
+                    
+                    // Update hatch progress
+                    const progress = state.treasury.hatchProgress;
+                    document.getElementById('hatchProgress').style.width = progress + '%';
+                    
+                    // Update hatch status
+                    const hatchSection = document.getElementById('hatchSection');
+                    const hatchStatus = document.getElementById('hatchStatus');
+                    const hatchBtn = document.getElementById('hatchBtn');
+                    
+                    if (state.treasury.canHatch) {
+                        hatchSection.classList.add('ready');
+                        hatchStatus.classList.add('ready');
+                        hatchStatus.textContent = '✓ READY TO HATCH! Click button below.';
+                        hatchBtn.classList.add('show');
+                    } else {
+                        hatchSection.classList.remove('ready');
+                        hatchStatus.classList.remove('ready');
+                        hatchStatus.textContent = 
+                            `Need ${state.treasury.neededForHatch.toFixed(2)} more USDC to hatch new agent`;
+                        hatchBtn.classList.remove('show');
+                    }
+                    
+                    // Update agents
+                    const agentList = document.getElementById('agentList');
+                    agentList.innerHTML = state.agents.map(agent => `
+                        <div class="agent-card">
+                            <div class="agent-name">${agent.name}</div>
+                            <span class="agent-gen">Gen ${agent.generation}</span>
+                            <div style="margin-top: 10px; font-size: 13px; color: var(--text-secondary);">
+                                ${agent.goal}
+                            </div>
+                            ${agent.cost ? `<div style="margin-top: 8px; font-size: 12px; color: var(--accent-gold);">Cost: ${agent.cost} USDC</div>` : ''}
+                        </div>
+                    `).join('');
+                    
+                    // Update events
+                    const eventList = document.getElementById('eventList');
+                    eventList.innerHTML = state.events.slice(0, 10).map(event => `
+                        <div class="event-item">
+                            <div class="event-type">${event.event_type.toUpperCase()}</div>
+                            <div class="event-content">${event.content}</div>
+                            <div class="event-time">${new Date(event.created_at).toLocaleString()}</div>
+                        </div>
+                    `).join('');
+                }
+            } catch (err) {
+                console.error('Update error:', err);
             }
-            
-            showStatus('🔗 Connecting to wallet...', 'loading');
+        }
+        
+        // Hatch agent
+        async function hatchAgent() {
+            const btn = document.getElementById('hatchBtn');
+            btn.disabled = true;
+            btn.textContent = '🥚 HATCHING...';
             
             try {
-                const web3 = new Web3(window.ethereum);
-                await window.ethereum.request({ method: 'eth_requestAccounts' });
+                const res = await fetch('/api/hatch', { method: 'POST' });
+                const data = await res.json();
                 
-                const accounts = await web3.eth.getAccounts();
-                const from = accounts[0];
-                
-                // Check if on Base network
-                const chainId = await web3.eth.getChainId();
-                if (chainId !== X402_CONFIG.chainId) {
-                    showStatus('🔄 Please switch to Base network in your wallet', 'error');
-                    try {
-                        await window.ethereum.request({
-                            method: 'wallet_switchEthereumChain',
-                            params: [{ chainId: '0x2105' }] // Base mainnet
-                        });
-                    } catch (e) {
-                        return;
-                    }
+                if (data.success) {
+                    alert(`🎉 ${data.message}`);
+                } else {
+                    alert('❌ ' + data.error);
                 }
-                
-                showStatus('💸 Processing USDC transfer...', 'loading');
-                
-                // Create USDC contract instance
-                const usdc = new web3.eth.Contract(USDC_ABI, X402_CONFIG.usdcContract);
-                const amount = BigInt(Math.floor(parseFloat(X402_CONFIG.amount) * 1000000));
-                
-                // Send transfer
-                const tx = await usdc.methods.transfer(X402_CONFIG.receiverAddress, amount.toString()).send({
-                    from: from
-                });
-                
-                showStatus('✅ Payment successful! Tx: ' + tx.transactionHash.slice(0, 20) + '...', 'success');
-                setTimeout(showJoke, 1500);
-                
             } catch (err) {
-                console.error(err);
-                showStatus('❌ Payment failed: ' + (err.message || 'Unknown error'), 'error');
+                alert('Error: ' + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '🥚 HATCH NEW AGENT (10 USDC)';
+                updateState();
             }
-        }
-        
-        function showJoke() {
-            const joke = jokes[Math.floor(Math.random() * jokes.length)];
-            document.getElementById('jokeSetup').textContent = joke.setup;
-            document.getElementById('jokePunchline').textContent = joke.punchline;
-            
-            document.getElementById('paymentView').style.display = 'none';
-            document.getElementById('jokeView').classList.add('show');
-            hideStatus();
-        }
-        
-        function resetView() {
-            document.getElementById('paymentView').style.display = 'block';
-            document.getElementById('jokeView').classList.remove('show');
-            hideStatus();
         }
         
         // Initialize
-        document.addEventListener('DOMContentLoaded', generateQRCode);
+        document.addEventListener('DOMContentLoaded', () => {
+            generateQR();
+            updateState();
+            setInterval(updateState, 5000); // Refresh every 5 seconds
+        });
     </script>
 </body>
 </html>
